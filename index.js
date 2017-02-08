@@ -9,7 +9,7 @@ function checkCSSLoader(input, options, webpack, callback) {
     results.push([ 'Line ' + line + ':' + col + ' - ' + msg ]);
   });
 
-  if (results) {
+  if (results.length) {
     for (var i = 0; i < results.length; i++){
       if (options.failTypeError) {
         webpack.emitError(results[i]);
