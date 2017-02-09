@@ -1,12 +1,24 @@
 var checkCSS    = require('airtight-css-lint');
 var loaderUtils = require('loader-utils');
 var assign      = require("object-assign");
+var sourceMap   = require('source-map');
 
 function checkCSSLoader(source, options, webpack, map, callback) {
   var results = [];
 
   checkCSS(source, function (line, col, msg) {
-    results.push([ 'Line ' + line + ':' + col + ' - ' + msg ]);
+    var message = 'Line ' + line + ':' + col + ' - ' + msg;
+    if (map) {
+      var smc = new sourceMap.SourceMapConsumer(map);
+      var originalPos = smc.originalPositionFor({
+        line: line,
+        column: col
+      });
+
+      message = originalPos.source + ':' + originalPos.line + ':' + originalPos.column + ' - ' + msg;
+    }
+
+    results.push([message]);
   });
 
   if (results.length) {
