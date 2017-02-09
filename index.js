@@ -2,10 +2,10 @@ var checkCSS    = require('airtight-css-lint');
 var loaderUtils = require('loader-utils');
 var assign      = require("object-assign");
 
-function checkCSSLoader(input, options, webpack, callback) {
+function checkCSSLoader(source, options, webpack, map, callback) {
   var results = [];
 
-  checkCSS(input, function (line, col, msg) {
+  checkCSS(source, function (line, col, msg) {
     results.push([ 'Line ' + line + ':' + col + ' - ' + msg ]);
   });
 
@@ -24,11 +24,11 @@ function checkCSSLoader(input, options, webpack, callback) {
   }
 
   if (callback) {
-    callback(null, input);
+    callback(null, source, map);
   }
 }
 
-module.exports = function(input) {
+module.exports = function(source, map) {
   var options = assign(
     {
       failTypeError: true,    // Use warning if false
@@ -37,16 +37,20 @@ module.exports = function(input) {
     loaderUtils.parseQuery(this.query)
   );
 
+  if (map !== null && typeof map !== "string") {
+		map = JSON.stringify(map);
+	}
+
   this.cacheable();
   var callback = this.async();
 
   if (!callback) {
-    checkCSSLoader(input, options, this);
+    checkCSSLoader(source, options, this, map);
 
-    return input;
+    return source;
   } else {
     try {
-      checkCSSLoader(input, options, this, callback);
+      checkCSSLoader(source, options, this, map, callback);
     } catch(e) {
       callback(e);
     }
