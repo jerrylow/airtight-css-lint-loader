@@ -38,8 +38,8 @@ module.exports = function(source, map) {
   );
 
   if (map !== null && typeof map !== "string") {
-		map = JSON.stringify(map);
-	}
+    map = JSON.stringify(map);
+  }
 
   this.cacheable();
   var callback = this.async();
