@@ -1,6 +1,6 @@
 {
   "name": "airtight-css-lint-loader",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A webpack loader for Airtight CSS linter",
   "main": "index.js",
   "author": "Jerry Low <lowjer@gmail.com>",
